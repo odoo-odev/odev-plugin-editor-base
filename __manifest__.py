@@ -1,6 +1,6 @@
-"""Plugin description.
+"""Interact with source code editors and apply configurations to integrate Odev.
 
-This can be multiline text.
+This could include debugger shortcuts as well as extension-specific parameters.
 """
 
 # --- Version information ------------------------------------------------------
