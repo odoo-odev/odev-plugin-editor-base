@@ -8,8 +8,7 @@ class EditorCommand(LocalDatabaseCommand):
     and open the editor with the project loaded.
     """
 
-    _name = "editor"
-    _aliases = ["edit"]
+    _name = "code"
 
     def run(self):
         editor_subclasses = Editor.__subclasses__()

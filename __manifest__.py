@@ -25,7 +25,7 @@ This could include debugger shortcuts as well as extension-specific parameters.
 # or merged change.
 # ------------------------------------------------------------------------------
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # --- Dependencies -------------------------------------------------------------
 # List other odev plugins from which this current plugin depends.
