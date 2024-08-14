@@ -1,9 +1,9 @@
-from odev.common.commands import LocalDatabaseCommand
+from odev.common.commands import DatabaseOrRepositoryCommand
 
 from odev.plugins.ps_tech_odev_editor_base.common.editor import Editor
 
 
-class EditorCommand(LocalDatabaseCommand):
+class EditorCommand(DatabaseOrRepositoryCommand):
     """Create configuration files to link the database with a project in the current source code editor
     and open the editor with the project loaded.
     """
@@ -19,5 +19,5 @@ class EditorCommand(LocalDatabaseCommand):
             raise self.error("Multiple editor plugins are activated, please deactivate all but one and retry")
 
         editor_class = Editor.__subclasses__()[0]
-        editor = editor_class(self._database)
+        editor = editor_class(self._database, self.args.repository)
         editor.open()
