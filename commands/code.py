@@ -1,6 +1,6 @@
 from odev.common.commands import DatabaseOrRepositoryCommand
 
-from odev.plugins.ps_tech_odev_editor_base.common.editor import Editor
+from odev.plugins.odev_plugin_editor_base.common.editor import Editor
 
 
 class EditorCommand(DatabaseOrRepositoryCommand):

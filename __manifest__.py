@@ -1,6 +1,9 @@
 """Interact with source code editors and apply configurations to integrate Odev.
 
 This could include debugger shortcuts as well as extension-specific parameters.
+
+This plugin on its own does not provide any editor support. It is meant to be
+extended by other plugins that provide support for specific editors.
 """
 
 # --- Version information ------------------------------------------------------
@@ -25,7 +28,7 @@ This could include debugger shortcuts as well as extension-specific parameters.
 # or merged change.
 # ------------------------------------------------------------------------------
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 # --- Dependencies -------------------------------------------------------------
 # List other odev plugins from which this current plugin depends.
