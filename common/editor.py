@@ -4,7 +4,7 @@ from typing import ClassVar, Optional
 
 from odev.common import bash
 from odev.common.connectors import GitConnector
-from odev.common.databases import Database, DummyDatabase, Repository
+from odev.common.databases import Database, LocalDatabase, Repository
 from odev.common.logging import logging
 
 
@@ -26,7 +26,7 @@ class Editor(ABC):
         :param repository: The repository to open in the editor.
         """
 
-        if not isinstance(database, DummyDatabase) and repository is not None:
+        if not isinstance(database, LocalDatabase) and repository is not None:
             raise ValueError("Cannot provide both database and repository")
 
         self.database = database
