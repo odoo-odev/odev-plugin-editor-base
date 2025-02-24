@@ -19,5 +19,10 @@ class EditorCommand(DatabaseOrRepositoryCommand):
             raise self.error("Multiple editor plugins are activated, please deactivate all but one and retry")
 
         editor_class = Editor.__subclasses__()[0]
-        editor = editor_class(self._database, self.args.repository)
+
+        try:
+            editor = editor_class(self._database, self.args.repository)
+        except ValueError as error:
+            raise self.error(str(error)) from error
+
         editor.open()
