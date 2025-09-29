@@ -28,7 +28,7 @@ extended by other plugins that provide support for specific editors.
 # or merged change.
 # ------------------------------------------------------------------------------
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 
 # --- Dependencies -------------------------------------------------------------
 # List other odev plugins from which this current plugin depends.

@@ -4,7 +4,7 @@ from typing import ClassVar, Optional
 
 from odev.common import bash
 from odev.common.connectors import GitConnector
-from odev.common.databases import Database, LocalDatabase, Repository
+from odev.common.databases import DummyDatabase, LocalDatabase, Repository
 from odev.common.logging import logging
 
 
@@ -20,19 +20,18 @@ class Editor(ABC):
     _display_name: ClassVar[str]
     """Display name of the code editor."""
 
-    def __init__(self, database: Database, repository: Optional[str] = None):
+    def __init__(self, database: DummyDatabase | LocalDatabase, repository: Optional[str] = None):
         """Initialize the editor with a database or repository.
         :param database: The database linked to the project to open in the editor.
         :param repository: The repository to open in the editor.
         """
-
-        if not isinstance(database, LocalDatabase) and repository is not None:
+        if isinstance(database, LocalDatabase) and repository is not None:
             raise ValueError("Cannot provide both database and repository")
 
         self.database = database
         """The database linked to the project to open in the editor."""
 
-        self.repository: str
+        self.repository: str = "odoo/odoo"
         """The repository to open in the editor."""
 
         if repository:
@@ -43,8 +42,8 @@ class Editor(ABC):
                 if isinstance(database.repository, Repository)
                 else database.repository.name
             )
-        else:
-            raise ValueError("No database or repository provided, or the database has no repository")
+        elif isinstance(database, LocalDatabase):
+            logger.warning(f"No repository associated with local database {database.name!r}")
 
     @property
     def git(self) -> GitConnector:
@@ -81,4 +80,8 @@ class Editor(ABC):
         """Open the editor with the project loaded."""
         self.configure()
         logger.info(f"Opening project {self.repository!r} in {self._display_name}")
+
+        if not self.git.exists:
+            logger.warning(f"Local repository {self.path} does not exist, opening the editor may fail")
+
         return bash.detached(self.command)
