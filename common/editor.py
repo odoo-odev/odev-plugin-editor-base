@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from argparse import Namespace
 from pathlib import Path
 from typing import ClassVar, Optional
 
@@ -20,16 +21,20 @@ class Editor(ABC):
     _display_name: ClassVar[str]
     """Display name of the code editor."""
 
-    def __init__(self, database: DummyDatabase | LocalDatabase, repository: Optional[str] = None):
+    def __init__(self, database: DummyDatabase | LocalDatabase, cmd_args: Namespace):
         """Initialize the editor with a database or repository.
         :param database: The database linked to the project to open in the editor.
-        :param repository: The repository to open in the editor.
+        :param cmd_args: Arguments from the `Editor` command.
         """
+        repository: Optional[str] = cmd_args.repository
         if isinstance(database, LocalDatabase) and repository is not None:
             raise ValueError("Cannot provide both database and repository")
 
         self.database = database
         """The database linked to the project to open in the editor."""
+
+        self.cmd_args = cmd_args
+        """The command arguments."""
 
         self.repository: str = "odoo/odoo"
         """The repository to open in the editor."""
