@@ -21,7 +21,7 @@ class EditorCommand(DatabaseOrRepositoryCommand):
         editor_class = Editor.__subclasses__()[0]
 
         try:
-            editor = editor_class(self._database, self.args.repository)
+            editor = editor_class(self._database, self.args)
         except ValueError as error:
             raise self.error(str(error)) from error
 
