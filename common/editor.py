@@ -6,6 +6,7 @@ from odev.common import bash
 from odev.common.connectors import GitConnector
 from odev.common.databases import DummyDatabase, LocalDatabase, Repository
 from odev.common.logging import logging
+from odev.common.version import OdooVersion
 
 
 logger = logging.getLogger(__name__)
@@ -20,19 +21,24 @@ class Editor(ABC):
     _display_name: ClassVar[str]
     """Display name of the code editor."""
 
-    def __init__(self, database: DummyDatabase | LocalDatabase, repository: Optional[str] = None):
+    def __init__(
+        self,
+        database: DummyDatabase | LocalDatabase,
+        repository: Optional[str] = None,
+        version: Optional[OdooVersion] = None,
+    ):
         """Initialize the editor with a database or repository.
         :param database: The database linked to the project to open in the editor.
         :param repository: The repository to open in the editor.
         """
-        if isinstance(database, LocalDatabase) and repository is not None:
-            raise ValueError("Cannot provide both database and repository")
-
         self.database = database
         """The database linked to the project to open in the editor."""
 
         self.repository: str = "odoo/odoo"
         """The repository to open in the editor."""
+
+        self.version = version
+        """The Odoo version to open in the editor."""
 
         if repository:
             self.repository = repository
@@ -46,6 +52,11 @@ class Editor(ABC):
             logger.warning(f"No repository associated with local database {database.name!r}")
 
     @property
+    def display_name(self) -> str:
+        """The display name of the editor."""
+        return self._display_name
+
+    @property
     def git(self) -> GitConnector:
         """The Git connector for the project."""
         return GitConnector(self.repository)
@@ -53,7 +64,7 @@ class Editor(ABC):
     @property
     def path(self) -> Path:
         """The path to the project."""
-        return self.git.path
+        return self.git.path if isinstance(self.database, LocalDatabase) else Path("~/odev/workspaces/").expanduser()
 
     @property
     def command(self) -> str:
@@ -79,7 +90,8 @@ class Editor(ABC):
     def open(self):
         """Open the editor with the project loaded."""
         self.configure()
-        logger.info(f"Opening project {self.repository!r} in {self._display_name}")
+        project = f"project {self.repository!r}" if not self.version else f"Odoo {self.version}"
+        logger.info(f"Opening {project} in {self.display_name}")
 
         if not self.git.exists:
             logger.warning(f"Local repository {self.path} does not exist, opening the editor may fail")
