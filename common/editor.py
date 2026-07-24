@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import ClassVar, Optional
+from typing import ClassVar
 
 from odev.common import bash
 from odev.common.connectors import GitConnector
@@ -24,8 +24,8 @@ class Editor(ABC):
     def __init__(
         self,
         database: DummyDatabase | LocalDatabase,
-        repository: Optional[str] = None,
-        version: Optional[OdooVersion] = None,
+        repository: str | None = None,
+        version: OdooVersion | None = None,
     ):
         """Initialize the editor with a database or repository.
         :param database: The database linked to the project to open in the editor.
