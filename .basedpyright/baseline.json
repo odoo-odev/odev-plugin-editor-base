@@ -1,0 +1,14 @@
+{
+  "files": {
+    "./commands/code.py": [
+      {
+        "code": "reportArgumentType",
+        "range": {
+          "endColumn": 30,
+          "lineCount": 1,
+          "startColumn": 16
+        }
+      }
+    ]
+  }
+}
