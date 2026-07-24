@@ -32,7 +32,7 @@ class EditorCommand(DatabaseOrRepositoryCommand):
 
         if not editor_subclasses:
             raise self.error("No editor is supported, please activate an editor plugin and retry")
-        elif len(editor_subclasses) > 1:
+        if len(editor_subclasses) > 1:
             raise self.error("Multiple editor plugins are activated, please deactivate all but one and retry")
 
         editor_class = Editor.__subclasses__()[0]
