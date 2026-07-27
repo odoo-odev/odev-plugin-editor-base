@@ -1,8 +1,13 @@
 from odev.common import args
 from odev.common.commands import DatabaseOrRepositoryCommand
+from odev.common.databases import LocalDatabase
+from odev.common.logging import logging
 from odev.common.version import OdooVersion
 
 from odev.plugins.odev_plugin_editor_base.common.editor import Editor
+
+
+logger = logging.getLogger(__name__)
 
 
 class EditorCommand(DatabaseOrRepositoryCommand):
@@ -36,6 +41,7 @@ class EditorCommand(DatabaseOrRepositoryCommand):
             raise self.error("Multiple editor plugins are activated, please deactivate all but one and retry")
 
         editor_class = Editor.__subclasses__()[0]
+        self.link_repository()
 
         try:
             editor = editor_class(
@@ -47,3 +53,19 @@ class EditorCommand(DatabaseOrRepositoryCommand):
             raise self.error(str(error)) from error
 
         editor.open()
+
+    def link_repository(self) -> None:
+        """Save the repository given on the command line as the one linked to the database.
+
+        Passing a repository used to apply to that single invocation only, so the next `odev code`
+        on the same database had to be given the repository again. The link is now persisted, which
+        is also what makes the database usable with the other commands relying on it.
+        """
+        if not isinstance(self._database, LocalDatabase) or not self.args.repository:
+            return
+
+        previous = self._database.repository
+        repository = self._database.link_repository(self.args.repository)
+
+        if repository is not None and repository != previous:
+            logger.info(f"Linked database {self._database.name!r} to repository {repository.full_name!r}")
